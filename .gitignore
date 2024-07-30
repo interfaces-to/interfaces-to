@@ -1,0 +1,13 @@
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+dist/
+
+# poetry
+poetry.lock
+
+# env
+.env

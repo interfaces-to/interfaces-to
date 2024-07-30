@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "interfaces-to"
+version = "0.1.1"
+description = "The quickest way to make Large Language Models do things."
+authors = ["Blair Hudson <blairhudson@users.noreply.github.com>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0" 
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
