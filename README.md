@@ -49,7 +49,7 @@ client = OpenAI()
 import interfaces_to as into
 
 # 2️⃣ add your favourite tools
-tools = [*into.Slack(functions=["send_slack_message"])]
+tools = into.tools(['Slack','OpenAI'])
 
 # 3️⃣ provide some input and start the loop
 messages = [{"role": "user", "content": "Introduce yourself in #general and make a joke in #random"}]
@@ -120,7 +120,14 @@ This prints the following output:
 
 Tools usually require a `token`. Tokens can always be configured by setting the relevant environment variables. e.g. for `Slack` you can set the `SLACK_BOT_TOKEN` environment variable.
 
-If you prefer to set the token directly in your code, you can do so by passing it as an argument to the tool. Tokens provided in code will override any environment variables.
+If you are using environment variables, you can take advantage of the `into.tools` function to automatically configure your tools. This function will look for the relevant environment variables and configure the tools with default settings.
+
+```python
+import interfaces_to as into
+tools = into.tools(['Slack'])
+```
+
+If you prefer to set the token directly in your code or have more control over tool settings, you can do so by passing arguments to each tool. Tokens provided in code will override any environment variables.
 
 You can optionally restrict `functions` to only those which you need.
 
@@ -129,20 +136,29 @@ Here's an example of configuring the Slack tool:
 ```python
 import interfaces_to as into
 
-slack = into.Slack(
+tools = [*into.Slack(
     token="xoxb-12345678-xxxxxxxxxx",
     functions=["send_slack_message"]
-)
+)]
 ```
+
+Note that each tool is preceded by an asterisk `*` to unpack the tool's functions into a list, which the OpenAI API SDK expects.
 
 ## 📦 Available tools
 
 `into` comes with loads of pre-built tools to help you get started quickly. These tools are designed to be simple, powerful and flexible, and can be used in any combination to create a wide range of applications.
 
-* [Slack](https://interfaces.to/tools/slack): `send_slack_message` (Send a message to a Slack channel)
-* [OpenAI](https://interfaces.to/tools/openai): `create_chat_completion` (Create a completion with the OpenAI API)
+* [Slack](https://interfaces.to/tools/slack):
+  * `send_slack_message`: Send a message to a Slack channel
+  * `create_channel`: Create a new Slack channel
+  * `list_channels`: List all Slack channels with optional filters
+  * `read_messages`: Read messages from a Slack channel
+  
+* [OpenAI](https://interfaces.to/tools/openai):
+  * `create_chat_completion` (Create a completion with the OpenAI API)
+  * `create_embedding` (Create an embedding with the OpenAI API)
 
-Possibly coming soon:
+Coming soon:
 
 * [GitHub](https://interfaces.to/tools/github):
   * `create_issue`: Create an issue on GitHub
@@ -150,6 +166,15 @@ Possibly coming soon:
   * `create_gist`: Create a gist on GitHub
   * `create_repository`: Create a repository on GitHub
   * `commit_to_repository`: Commit changes to a repository on GitHub
+  * `get_repository`: Get a repository on GitHub
+  * `search_repositories`: Search for repositories on GitHub
+* [Jira](https://interfaces.to/tools/jira):
+  * `create_issue`: Create an issue on Jira
+  * `assign_issue`: Assign an issue on Jira
+  * `transition_issue`: Transition an issue on Jira
+  * `comment_on_issue`: Comment on an issue on Jira
+  * `get_issue`: Get an issue on Jira
+  * `search_issues`: Search for issues on Jira
 * [Discord](https://interfaces.to/tools/discord): `send_discord_message` (Send a message to a Discord channel)
 * [Telegram](https://interfaces.to/tools/telegram): `send_telegram_message` (Send a message to a Telegram chat)
 * [Facebook Messenger](https://interfaces.to/tools/facebook-messenger): `send_facebook_message` (Send a message to a Facebook Messenger chat)
