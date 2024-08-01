@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Fetch all history for all tags and branches
 
       - name: Set up Python version from file
         uses: actions/setup-python@v4
@@ -57,14 +57,15 @@ jobs:
       - name: Get last release tag
         id: get_last_release
         run: |
-          LAST_RELEASE=$(git describe --tags --abbrev=0)
+          LAST_RELEASE=$(git describe --tags --abbrev=0 --exclude=$(git describe --tags --abbrev=0 HEAD^))
           echo "LAST_RELEASE=$LAST_RELEASE" >> $GITHUB_ENV
+        shell: bash
 
       - name: Generate release notes
         id: generate_release_notes
         run: |
           echo "Changes in this release:" > release_notes.md
-          git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" >> release_notes.md
+          git log ${{ env.LAST_RELEASE }}..HEAD --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" >> release_notes.md
           echo "" >> release_notes.md
           echo "[View on PyPI](https://pypi.org/project/interfaces-to/${{ env.VERSION }}/)" >> release_notes.md
           echo "" >> release_notes.md
@@ -76,6 +77,7 @@ jobs:
           echo "To upgrade via poetry:" >> release_notes.md
           echo "\`\`\`" >> release_notes.md
           echo "poetry add interfaces-to@${{ env.VERSION }}" >> release_notes.md
+          echo "\`\`\`" >> release_notes.md
 
       - name: Output release notes for debugging
         run: cat release_notes.md
