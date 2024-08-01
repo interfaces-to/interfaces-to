@@ -9,8 +9,6 @@ on:
 jobs:
   version_bump_and_publish:
     permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push the
-      # added or changed files to the repository.
       contents: write
     runs-on: ubuntu-latest
     steps:
@@ -50,14 +48,18 @@ jobs:
         run: |
           poetry publish --build
 
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
+
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: v${{ env.VERSION }}
+          release_name: Release v${{ env.VERSION }}
           body: |
             Changes in this release:
             - Auto-published by GitHub Actions
