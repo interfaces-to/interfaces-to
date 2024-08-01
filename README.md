@@ -42,20 +42,21 @@ poetry add interfaces-to
 Add your favourite tools to your existing Python project with 4 lines of code:
 
 ```python
-from openai import OpenAI
-client = OpenAI()
-
 # 1️⃣ import `into`
 import interfaces_to as into
 
-# 2️⃣ add your favourite tools
+# 2️⃣ import the OpenAI client as normal
+from openai import OpenAI
+client = OpenAI()
+
+# 3️⃣ add your favourite tools
 tools = into.tools(['Slack','OpenAI'])
 
-# 3️⃣ provide some input and start the loop
-messages = [{"role": "user", "content": "Introduce yourself in #general and make a joke in #random"}]
+# 4️⃣ provide some input and start the loop
+messages = [{"role": "user", "content": "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"}]
 while into.running(messages):
 
-  # 4️⃣ create a completion as normal, and run your tools! 🪄
+  # 5️⃣ create a completion as normal, and run your tools! 🪄
   completion = client.chat.completions.create(
     model="gpt-4o",
     messages=messages,
@@ -64,68 +65,119 @@ while into.running(messages):
   )
   messages = into.run(messages, completion, tools)
 
-# 5️⃣ stand back and watch the magic happen! 🎩✨
-print(messages)
+# 6️⃣ stand back and watch the magic happen! 🎩✨
 ```
 
 This prints the following output:
-
 ```python
-[
-    {
-        'role': 'user', 
-        'content': 'Introduce yourself in #general, make a joke in #random'
-    }, 
-    {
-        'role': 'assistant', 
-        'content': None, 
-        'tool_calls': [
-            {
-                'id': 'call_135kkxcrN4OxAQXZinlXGYb', 
-                'type': 'function', 
-                'function': {
-                    'name': 'send_slack_message', 
-                    'arguments': '{"channel": "#general", "message": "Hi everyone! I\'m an assistant here to help with tasks and answer questions. Excited to work with you all!"}'
-                }
-            }, 
-            {
-                'id': 'call_08ApGj5q8ZyRLuHo10y4FKb', 
-                'type': 'function', 
-                'function': {
-                    'name': 'send_slack_message', 
-                    'arguments': '{"channel": "#random", "message": "Why don\'t scientists trust atoms? Because they make up everything!"}'
-                }
-            }
-        ]
-    }, 
-    {
-        'role': 'tool', 
-        'content': "Posted message to #general: Hi everyone! I'm an assistant here to help with tasks and answer questions. Excited to work with you all!", 
-        'tool_call_id': 'call_135kkxcrN4OxAQXZinlXGYb'
-    }, 
-    {
-        'role': 'tool', 
-        'content': "Posted message to #random: Why don't scientists trust atoms? Because they make up everything!", 
-        'tool_call_id': 'call_08ApGj5q8ZyRLuHo10y4FKb'
-    }, 
-    {
-        'role': 'assistant', 
-        'content': "I've introduced myself in #general and shared a joke in #random! Let me know if you need anything else."
-    }
-]
+[user]		  What was the last thing said in each slack channel? Write a 5 line poem to summ
+		      arise and share it in an appropriate channel
 
+[assistant]   Calling 1 tool:
+		      list_channels({})
+
+[tool]	      Output of tool call list_channels({})
+		      Channels: [{'id': 'C07EEUES770', 'name': 'general', 'is_channel':...
+
+[assistant]	  Calling 7 tools:
+              read_messages({"channel": "general"})
+              read_messages({"channel": "hello"})
+              read_messages({"channel": "fun-times"})
+              read_messages({"channel": "poetry"})
+              read_messages({"channel": "jokes"})
+              read_messages({"channel": "welcome"})
+              read_messages({"channel": "random"})
+
+[tool]		  Output of tool call read_messages({"channel": "random"})
+		      Messages: [{'subtype': 'channel_join', 'user': 'U07ET3LMDB7', ...
+
+[tool]		  Output of tool call read_messages({"channel": "welcome"})
+		      Error reading messages: not_in_channel
+
+[tool]		  Output of tool call read_messages({"channel": "jokes"})
+		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': '1722477596.990159', ...
+
+[tool]		  Output of tool call read_messages({"channel": "poetry"})
+		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts':...
+
+[tool]		  Output of tool call read_messages({"channel": "fun-times"})
+		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': ...
+
+[tool]		  Output of tool call read_messages({"channel": "hello"})
+		      Messages: [{'subtype': 'channel_join', 'user': 'U07EP9STUTU', 'text': '<@U07EP9STUTU> has joined the channel', 'type': 'message', 'ts': '1722421262.722359'}]
+
+[tool]		  Output of tool call read_messages({"channel": "general"})
+		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': ...
+
+[assistant]	  Here is a summary poem of the last messages shared in the Slack channels:
+		
+              In **#general**, they said with glee,
+              "Atoms make up all that we see!"
+              **#hello** greeted someone new,
+              Joining the channel, the greetings flew.
+              
+              **#fun-times** loved a joke,
+              On atoms that can't be broke.
+              In the **#poetry** nook, atoms we praised,
+              With playful rhymes, our spirits raised.
+              
+              **#jokes** was all about the spin,
+              Electrons in a debate always win.
+              And though **#welcome** remained hushed,
+              **#random** laughed at atoms crushed.
+              
+              I'll share this poem in the **#poetry** channel.
+
+[tool]		  Output of tool call send_slack_message({"channel":"poetry","message":"Here's a "...
+              Message sent to poetry with timestamp 1722493789.651039: 
+              Here's a summary poem of our last messages:
+              
+              In **#general**, they said with glee,
+              "Atoms make up all that we see!"
+              **#hello** greeted someone new,
+              Joining the channel, the greetings flew.
+              
+              **#fun-times** loved a joke,
+              On atoms that can't be broke.
+              In the **#poetry** nook, atoms we praised,
+              With playful rhymes, our spirits raised.
+              
+              **#jokes** was all about the spin,
+              Electrons in a debate always win.
+              And though **#welcome** remained hushed,
+              **#random** laughed at atoms crushed.
+
+[assistant]	  I have shared the poem summarizing the last messages in each channel
+              to the **#poetry** channel.
 ```
 
+`messages` is also updated with the latest messages and retains the format needed by the OpenAI SDK, so you can continue the adventure and build more complex applications.
+
+You can run this example in [this Jupyter notebook](./quickstart.ipynb).
+
 ### Configurating tools
+
+#### Using environment variables (Recommended for production)
 
 Tools usually require a `token`. Tokens can always be configured by setting the relevant environment variables. e.g. for `Slack` you can set the `SLACK_BOT_TOKEN` environment variable.
 
 If you are using environment variables, you can take advantage of the `into.tools` function to automatically configure your tools. This function will look for the relevant environment variables and configure the tools with default settings.
 
 ```python
-import interfaces_to as into
 tools = into.tools(['Slack'])
 ```
+
+#### Using a `.env` file (Recommended for local development)
+
+You can also configure your tools using a `.env` file. This is useful if you want to keep your tokens and other settings in a single file and helpful for local development.
+
+Simply add a `.env` file in the root of your project with the following format:
+
+```env
+SLACK_BOT_TOKEN=xoxb-12345678-xxxxxxxxxx
+```
+
+#### Setting tokens directly in code
 
 If you prefer to set the token directly in your code or have more control over tool settings, you can do so by passing arguments to each tool. Tokens provided in code will override any environment variables.
 
@@ -134,8 +186,6 @@ You can optionally restrict `functions` to only those which you need.
 Here's an example of configuring the Slack tool:
 
 ```python
-import interfaces_to as into
-
 tools = [*into.Slack(
     token="xoxb-12345678-xxxxxxxxxx",
     functions=["send_slack_message"]
@@ -148,15 +198,14 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 
 `into` comes with loads of pre-built tools to help you get started quickly. These tools are designed to be simple, powerful and flexible, and can be used in any combination to create a wide range of applications.
 
-* [Slack](https://interfaces.to/tools/slack):
-  * `send_slack_message`: Send a message to a Slack channel
-  * `create_channel`: Create a new Slack channel
-  * `list_channels`: List all Slack channels with optional filters
-  * `read_messages`: Read messages from a Slack channel
-  
-* [OpenAI](https://interfaces.to/tools/openai):
-  * `create_chat_completion` (Create a completion with the OpenAI API)
-  * `create_embedding` (Create an embedding with the OpenAI API)
+Table of available tools:
+
+| Tool | Description | Functions | Configuration |
+| --- | --- | --- | --- |
+| [OpenAI](https://interfaces.to/tools/openai) | Create completions and embeddings with the OpenAI API (Yes, that means self-prompting 🔥) | `create_chat_completion`, `create_embedding` | Uses `OPENAI_API_KEY` environment variable |
+| [Slack](https://interfaces.to/tools/slack) | Send messages to Slack channels, create channels, list channels, and read messages | `send_slack_message`, `create_channel`, `list_channels`, `read_messages` | Uses `SLACK_BOT_TOKEN` environment variable |
+
+
 
 Coming soon:
 
