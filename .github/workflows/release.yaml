@@ -55,6 +55,7 @@ jobs:
       - name: Get last release tag
         id: get_last_release
         run: echo "LAST_RELEASE=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+        shell: bash
 
       - name: Generate release notes
         id: generate_release_notes
@@ -73,6 +74,9 @@ jobs:
           echo "\`\`\`" >> release_notes.md
           echo "poetry add interfaces-to@${{ env.VERSION }}" >> release_notes.md
           echo "\`\`\`" >> release_notes.md
+
+      - name: Output release notes for debugging
+        run: cat release_notes.md
 
       - name: Create release
         id: create_release
