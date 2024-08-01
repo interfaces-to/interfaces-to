@@ -52,6 +52,28 @@ jobs:
         id: get_version
         run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
 
+      - name: Get last release tag
+        id: get_last_release
+        run: echo "LAST_RELEASE=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Generate release notes
+        id: generate_release_notes
+        run: |
+          echo "Changes in this release:" > release_notes.md
+          git log ${{ env.LAST_RELEASE }}..HEAD --pretty=format:"- %s" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "[View on PyPI](https://pypi.org/project/interfaces-to/${{ env.VERSION }}/)" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "To upgrade via pip:" >> release_notes.md
+          echo "\`\`\`" >> release_notes.md
+          echo "pip install --upgrade interfaces-to" >> release_notes.md
+          echo "\`\`\`" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "To upgrade via poetry:" >> release_notes.md
+          echo "\`\`\`" >> release_notes.md
+          echo "poetry add interfaces-to@${{ env.VERSION }}" >> release_notes.md
+          echo "\`\`\`" >> release_notes.md
+
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -60,9 +82,7 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: Release v${{ env.VERSION }}
-          body: |
-            Changes in this release:
-            - Auto-published by GitHub Actions
+          body_path: release_notes.md
 
       - name: Prevent publish trigger
         run: echo "Skipped publish" > skip_publish.txt
