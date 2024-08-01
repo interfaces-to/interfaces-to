@@ -1,10 +1,17 @@
 [tool.poetry]
 name = "interfaces-to"
-version = "0.1.1"
+version = "0.1.2"
 description = "The quickest way to make Large Language Models do things."
 authors = ["Blair Hudson <blairhudson@users.noreply.github.com>"]
 readme = "README.md"
 license = "MIT"
+
+homepage = "https://interfaces.to"
+repository = "https://github.com/interfaces-to/interfaces-to"
+documentation = "https://interfaces.to/interfaces-to"
+
+keywords = ["llm-agent", "openai"]
+classifiers = ["Development Status :: 3 - Alpha", "Intended Audience :: Developers", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3.10"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
