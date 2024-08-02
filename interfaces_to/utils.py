@@ -1,5 +1,6 @@
 from .bases import Messages
 import json
+import importlib
 
 def run(messages, completion, tools, pretty_messages=True):
     tool_map = {json.loads(json.dumps(tool))["function"]["name"]: tool for tool in tools}
@@ -137,12 +138,35 @@ def running(messages, verbose=True) -> bool:
     return is_running
 
 
-def tools(tool_names=[]) -> list[str]:
+
+def tools(tool_names=[]):
     """A helper function to import all named tools with default arguments"""
 
     result = []
     for tool_name in tool_names:
-        module = __import__(__name__.split('.')[0], fromlist=[tool_name])
-        result.extend(getattr(module, tool_name)())
+        tool_class = importlib.import_module(f".{tool_name}", package=__package__)
+        result.extend(tool_class())
+        
     return result
 
+
+
+class LazyImport:
+    def __init__(self, module_name, class_name):
+        self.module_name = module_name
+        self.class_name = class_name
+        self._class = None
+
+    def _load_class(self):
+        module = importlib.import_module(self.module_name, package=__package__)
+        self._class = getattr(module, self.class_name)
+
+    def __getattr__(self, item):
+        if self._class is None:
+            self._load_class()
+        return getattr(self._class, item)
+
+    def __call__(self, *args, **kwargs):
+        if self._class is None:
+            self._load_class()
+        return self._class(*args, **kwargs)
