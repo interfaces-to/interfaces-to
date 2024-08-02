@@ -124,7 +124,7 @@ def running(messages, verbose=True) -> bool:
             # get the last message where tool_calls is not None
             tool_calls_message = next((message for message in reversed(messages) if message.get('tool_calls')), None)
 
-            for messages in to_print:
+            for messages in reversed(to_print):
                 if tool_calls_message:
                     print_message(messages, tool_calls_message)
                 else:
