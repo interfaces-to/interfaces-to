@@ -198,8 +198,6 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 
 `into` comes with loads of pre-built tools to help you get started quickly. These tools are designed to be simple, powerful and flexible, and can be used in any combination to create a wide range of applications.
 
-Table of available tools:
-
 | Tool | Description | Functions | Configuration |
 | --- | --- | --- | --- |
 | [OpenAI](https://interfaces.to/tools/openai) | Create completions and embeddings with the OpenAI API (Yes, that means self-prompting 🔥) | `create_chat_completion`, `create_embedding` | Uses `OPENAI_API_KEY` environment variable |
@@ -252,7 +250,7 @@ Join the [interfaces.to Slack](https://join.slack.com/t/interfacesto/shared_invi
 
 ## 🤝 Contributors (coming soon!)
 
-We welcome contributions from the community! Please see our [contributing guide](https://interfaces.to/contributing) (coming soon) for more information.
+We welcome contributions from the community! Please see our [contributing guide](./contributing.md) for more information.
 
 Notable contributors and acknowledgements:
 
