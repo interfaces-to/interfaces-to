@@ -200,6 +200,7 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 
 | Tool | Description | Functions | Configuration |
 | --- | --- | --- | --- |
+| [Self](https://interfaces.to/tools/self) | Encourage self awareness. | `wait` | Not required. |
 | [OpenAI](https://interfaces.to/tools/openai) | Create completions and embeddings with the OpenAI API (Yes, that means self-prompting 🔥) | `create_chat_completion`, `create_embedding` | Uses `OPENAI_API_KEY` environment variable |
 | [Slack](https://interfaces.to/tools/slack) | Send messages to Slack channels, create channels, list channels, and read messages | `send_slack_message`, `create_channel`, `list_channels`, `read_messages` | Uses `SLACK_BOT_TOKEN` environment variable |
 
