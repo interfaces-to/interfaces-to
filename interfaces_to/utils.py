@@ -139,7 +139,7 @@ def running(messages, verbose=True) -> bool:
 
 
 
-def tools(tool_names=[]):
+def import_tools(tool_names=[]):
     """A helper function to import all named tools with default arguments"""
 
     result = []

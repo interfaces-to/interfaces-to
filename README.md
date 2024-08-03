@@ -50,7 +50,7 @@ from openai import OpenAI
 client = OpenAI()
 
 # 3️⃣ add your favourite tools
-tools = into.tools(['Slack','OpenAI'])
+tools = into.import_tools(['Slack','OpenAI'])
 
 # 4️⃣ provide some input and start the loop
 messages = [{"role": "user", "content": "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"}]
@@ -161,10 +161,10 @@ You can run this example in [this Jupyter notebook](./quickstart.ipynb).
 
 Tools usually require a `token`. Tokens can always be configured by setting the relevant environment variables. e.g. for `Slack` you can set the `SLACK_BOT_TOKEN` environment variable.
 
-If you are using environment variables, you can take advantage of the `into.tools` function to automatically configure your tools. This function will look for the relevant environment variables and configure the tools with default settings.
+If you are using environment variables, you can take advantage of the `into.import_tools` function to automatically configure your tools. This function will look for the relevant environment variables and configure the tools with default settings.
 
 ```python
-tools = into.tools(['Slack'])
+tools = into.import_tools(['Slack'])
 ```
 
 #### Using a `.env` file (Recommended for local development)

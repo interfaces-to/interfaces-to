@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import sys
-from .utils import run, running, tools, LazyImport
+from .utils import LazyImport, run, running, import_tools
 
 # all tools are imported lazily to avoid hard package dependencies
 tool_classes = [
@@ -17,4 +17,4 @@ for name, location, class_name in tool_classes:
     sys.modules[__name__ + '.' + name] = LazyImport(location, class_name)
 
 # only export what is needed
-__all__ = [class_name for _, _, class_name in tool_classes] + ['tools', 'run', 'running']
+__all__ = [class_name for _, _, class_name in tool_classes] + [run, running, import_tools]
