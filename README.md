@@ -1,22 +1,22 @@
-<center>
-  <img src="./interfaces-to.png" alt="interfaces.to" width="250" />
-</center>
 
-# 🐙 interfaces.to - Add a little Action to your LLM Adventure
+<center><img src="https://github.com/interfaces-to/interfaces-to/raw/main/interfaces-to.png" alt="interfaces.to" width="250" /></center>
 
-**interfaces.to** (aka `into`) is the quickest way to make Large Language Models _do_ things. It's a simple, powerful and flexible way to build more useful, more engaging and more valuable applications with LLMs.
+
+# Add a little Action to your LLM Adventure with 🐙 Interfaces
+
+**🐙 Interfaces** (aka `into`) is the quickest way to make Large Language Models _do_ things. It's a simple, powerful and flexible way to build more useful, more engaging and more valuable applications with LLMs.
 
 ## ✨ Key Features
 
 ⭐️ Built-in tools for common tasks and platforms<br/>
 ⭐️ Start building with just 4(!) lines of code<br/>
-⭐️ Developer-friendly Python library<br/>
+⭐️ Beginner-friendly Python library<br/>
 ⭐️ Extensible design for custom tools<br/>
 ⭐️ Simple and secure configuration<br/>
 ⭐️ Fully compatible with the OpenAI API SDK<br/>
 ⭐️ Works with gpt-4o, gpt-4o-mini and other OpenAI models<br/>
 ⭐️ Works with llama3.1, mistral-large and more via [ollama tools](https://ollama.com/search?c=tools)<br/>
-⭐️ Supports (thrives) on `parallel_tool_calls`<br/>
+⭐️ Supports (thrives) on `parallel_tool_calls` ([more info](https://platform.openai.com/docs/guides/function-calling/parallel-function-calling)) <br/>
 ⭐️ Works with any LLM that supports the OpenAI API<br/>
 ⭐️ Runs on your local machine, in the cloud, or on the edge<br/>
 ⭐️ Open-source, MIT licensed, and community-driven<br/>
@@ -247,7 +247,7 @@ For more information, check out the [detailed documentation](https://interfaces.
 
 ## 💬 Community
 
-Join the [interfaces.to Slack](https://join.slack.com/t/interfacesto/shared_invite/zt-2nocjgn6q-SkrZJ9wppcJLz0Cn9Utw8A) to chat with other LLM adventurers, ask questions, and share your projects.
+Join the [🐙 Interfaces Slack](https://join.slack.com/t/interfacesto/shared_invite/zt-2nocjgn6q-SkrZJ9wppcJLz0Cn9Utw8A) to chat with other LLM adventurers, ask questions, and share your projects.
 
 ## 🤝 Contributors (coming soon!)
 
