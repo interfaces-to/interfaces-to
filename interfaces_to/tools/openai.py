@@ -1,8 +1,8 @@
 from ..bases import FunctionSet, JSONSerializableFunction
-from openai import OpenAI
+from openai import OpenAI as OpenAISDK
 import os
 
-class OpenAITool(FunctionSet):
+class OpenAI(FunctionSet):
 
     class CreateChatCompletion(JSONSerializableFunction):
 
@@ -37,7 +37,7 @@ class OpenAITool(FunctionSet):
         }
             
         def create_chat_completion(self, prompt, model="gpt-4o", system_prompt="You are a helpful assistant.", max_tokens=None):
-            client = OpenAI(api_key=self.tool.token)
+            client = OpenAISDK(api_key=self.tool.token)
             completion = client.chat.completions.create(
                 model=model,
                 messages=[
@@ -75,7 +75,7 @@ class OpenAITool(FunctionSet):
             }
 
         def create_embedding(self, input, model="text-embedding-3-large"):
-            client = OpenAI(api_key=self.tool.token)
+            client = OpenAISDK(api_key=self.tool.token)
             embedding = client.embeddings.create(
                 model=model,
                 input=input
