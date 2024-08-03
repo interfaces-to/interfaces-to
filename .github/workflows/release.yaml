@@ -54,7 +54,7 @@ jobs:
         id: get_version
         run: echo "VERSION=$(poetry version -s)" >> $GITHUB_ENV
 
-      - name: Get last release tag #--skip=0 because we haven't fetched after the version bump
+      - name: Get last release tag
         id: get_last_release
         run: |
           LAST_RELEASE=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=0 --max-count=1))
@@ -65,7 +65,7 @@ jobs:
         id: generate_release_notes
         run: |
           echo "Changes in this release:" > release_notes.md
-          git log ${{ env.LAST_RELEASE }}..HEAD --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" >> release_notes.md
+          git log ${{ env.LAST_RELEASE }}..HEAD --skip=1 --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" >> release_notes.md
           echo "" >> release_notes.md
           echo "" >> release_notes.md
           echo "[View details on PyPI](https://pypi.org/project/interfaces-to/${{ env.VERSION }}/)" >> release_notes.md
