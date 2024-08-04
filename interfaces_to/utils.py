@@ -151,13 +151,19 @@ def running(messages, verbose=True) -> bool:
     return is_running
 
 
-def import_tools(tool_names=[]):
-    """A helper function to import all named tools with default arguments"""
+def import_tools(tool_names=[], include_self=True):
+    """A helper function to import all named tools with default arguments. 
+    Self is included by default, but can be excluded by setting include_self=False"""
 
     result = []
     for tool_name in tool_names:
         tool_class = importlib.import_module(
             f".{tool_name}", package=__package__)
+        result.extend(tool_class())
+
+    if include_self and 'Self' not in tool_names:
+        tool_class = importlib.import_module(
+            ".Self", package=__package__)
         result.extend(tool_class())
 
     return result

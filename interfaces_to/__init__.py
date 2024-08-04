@@ -6,12 +6,12 @@ from .utils import LazyImport, run, running, import_tools
 
 # all tools are imported lazily to avoid hard package dependencies
 tool_classes = [
+    ('Self', '.tools.self'),
     ('Slack', '.tools.slack'),
     ('OpenAI', '.tools.openai'),
     ('Notion', '.tools.notion'),
-    ('Self', '.tools.self'),
     ('Airtable', '.tools.airtable'),
-    ('PeopleDataLabs', '.tools.peopledatalabs'),
+    ('PeopleDataLabs', '.tools.peopledatalabs')
 ]
 
 # create a module for each tool
