@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "interfaces-to"
-version = "0.2.17"
+version = "0.2.18"
 description = "The quickest way to make Large Language Models do things."
 authors = ["Blair Hudson <blairhudson@users.noreply.github.com>"]
 readme = "README.md"
