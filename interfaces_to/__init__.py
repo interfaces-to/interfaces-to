@@ -10,6 +10,7 @@ tool_classes = [
     ('OpenAI', '.tools.openai'),
     ('Notion', '.tools.notion'),
     ('Self', '.tools.self'),
+    ('Airtable', '.tools.airtable'),
 ]
 
 
