@@ -11,8 +11,8 @@ tool_classes = [
     ('Notion', '.tools.notion'),
     ('Self', '.tools.self'),
     ('Airtable', '.tools.airtable'),
+    ('PeopleDataLabs', '.tools.peopledatalabs'),
 ]
-
 
 # create a module for each tool
 for class_name, location in tool_classes:

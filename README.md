@@ -205,6 +205,7 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 | [Slack](https://interfaces.to/tools/slack) | Send messages to Slack channels, create channels, list channels, and read messages | `send_slack_message`, `create_channel`, `list_channels`, `read_messages` | Uses `SLACK_BOT_TOKEN` environment variable |
 | [Notion](https://interfaces.to/tools/notion) | Find, read and create pages in Notion | `search_notion`, `query_notion_database`, `read_notion_page`, `create_notion_page` | Uses `NOTION_TOKEN` environment variable. Databases must be explicitly shared with the integration. |
 | [Airtable](https://interfaces.to/tools/airtable) | Find, read and create records in Airtable | `list_all_bases`, `get_base`, `list_base_records`, `create_base_records` | Uses `AIRTABLE_TOKEN` environment variable |
+| [People Data Labs](https://interfaces.to/tools/people-data-labs) | Find information about people and companies | `find_person`, `find_company` | Uses `PDL_API_KEY` environment variable |
 
 More tools are coming soon:
 
