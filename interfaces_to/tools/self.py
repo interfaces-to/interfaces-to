@@ -30,3 +30,10 @@ class Self(FunctionSet):
         if available_tools:
             output += f"\nAvailable tools: {available_tools}"
         return output
+    
+    @callable_function
+    def get_time(self):
+        """
+        Get the current time
+        """
+        return time.ctime()
