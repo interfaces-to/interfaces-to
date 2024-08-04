@@ -14,10 +14,20 @@ These are the core development principles that the project follows:
 
 5. **Be secure:** Tools should never allow for the execution of arbitrary code in unsandboxed environments. Tools should always be designed to be safe to use in a production environment. Tools should be reviewed by the community before being merged into the project.
 
-## Creating a new tool
+## Creating tools
 
 Please be aware that the `into` project is still in its early stages, and the process for contributing a new tool is still being developed with regular breaking changes to the API. If you are interested in contributing a new tool, please reach out to the project maintainers for guidance.
 
+### Tool structure
+
 Tools can be added by creating a new Python file in the `interfaces_to/tools` directory and adding the tool to the `tool_classes` definition in `interfaces_to/__init__.py`.
 
-A tool should be a single class that inherits from `FunctionSet`. The class should include the functions that the tool provides for calling, decorated with the `@callable_function` decorator. Each function should include a docstring that describes the function and its parameters, and the function should define type hints for its parameters. An error will be raised if the decorated fuction does not implement these things. Any parameters without a default value will be treated as required parameters, and any parameters with a default value will be treated as optional parameters.
+A tool should be a single class that inherits from `FunctionSet`. The class should include the functions that the tool provides for calling, decorated with the `@callable_function` decorator. 
+
+### Function structure
+
+Each function should include a docstring that describes the function and its parameters, and the function should define type hints for its parameters. An error will be raised if the decorated fuction does not implement these things. Any parameters without a default value will be treated as required parameters, and any parameters with a default value will be treated as optional parameters. For best results, always consider the descriptions of the function and its parameters from the perspective of the LLM.
+
+### Authentication
+
+For tools that require authentication, the tool should use the decorator `@tool_auth(token_env_name='TOKEN_NAME')`, where `TOKEN_NAME` is the name of the environment variable that the tool will use to retrieve the authentication token. You can then access this token in your callable functions by using `self.token`.

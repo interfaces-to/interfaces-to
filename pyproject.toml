@@ -17,6 +17,7 @@ classifiers = ["Development Status :: 3 - Alpha", "Intended Audience :: Develope
 python = "^3.10"
 python-dotenv = "^1.0.1"
 docstring-parser = "^0.16"
+requests = "^2.32.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0" 

@@ -1,3 +1,5 @@
+from pydantic import create_model
+from typing import get_type_hints
 import inspect
 from .bases import JSONSerializableFunction, Messages
 from docstring_parser import parse
@@ -182,6 +184,17 @@ class LazyImport:
         return self._class(*args, **kwargs)
 
 
+def method_to_json_schema(method):
+    signature = inspect.signature(method)
+    hints = get_type_hints(method)
+    hints.pop('return', None)  # Remove return type hint if present
+    hints.pop('self', None)  # Remove 'self' from type hints
+    model_fields = {name: (typ, ...) for name,
+                    typ in hints.items() if name in signature.parameters}
+    dynamic_model = create_model('DynamicModel', **model_fields)
+    return dynamic_model.schema()
+
+
 def callable_function(func):
 
     func._callable = True
@@ -195,9 +208,6 @@ def callable_function(func):
             # print the func parameters, type hints, and defaults
             signature = inspect.signature(func)
             func_parameters = signature.parameters
-
-            properties = {}
-            required = []
 
             # check that the function has a docstring
             if not func.__doc__:
@@ -228,41 +238,29 @@ def callable_function(func):
                     raise ValueError(
                         f"Missing type hint for parameter {parameter.name} in function {func.__name__}")
 
-            for parameter in func_parameters.values():
-                if parameter.name == 'self':
-                    continue
+            # generate JSON schema for the function parameters
+            parameters = method_to_json_schema(func)
 
-                type_map = {
-                    'int': 'integer',
-                    'str': 'string',
-                    'float': 'number',
-                    'bool': 'boolean',
-                    'dict': 'object',
-                    'list': 'array'
-                }
-
-                properties[parameter.name] = {
-                    'type': type_map.get(parameter.annotation.__name__),
-                    'description': params[parameter.name].description
-                }
-
-                if parameter.default == inspect.Parameter.empty:
-                    required.append(parameter.name)
+            # add descriptions from docstring to parameters
+            for parameter in parameters['properties']:
+                if parameter in params:
+                    parameters['properties'][parameter]['description'] = params[parameter].description
 
             self['function'] = {
                 "name": func.__name__,
                 "description": docstring.description,
-                "parameters": {
-                    'type': 'object',
-                    'properties': properties
-                }
+                "parameters": parameters
             }
 
-            if required:
-                self['function']['parameters']['required'] = required
-
-        # add func to the class with the same name
+    # add func to the class with the same name
     setattr(CallableFunction, func.__name__, func)
 
     func._class = CallableFunction
     return func
+
+
+def tool_auth(*, token_env_name):
+    def decorator(cls):
+        cls.token_env_name = token_env_name
+        return cls
+    return decorator
