@@ -204,42 +204,18 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 | [OpenAI](https://interfaces.to/tools/openai) | Create completions and embeddings with the OpenAI API (Yes, that means self-prompting 🔥) | `create_chat_completion`, `create_embedding` | Uses `OPENAI_API_KEY` environment variable |
 | [Slack](https://interfaces.to/tools/slack) | Send messages to Slack channels, create channels, list channels, and read messages | `send_slack_message`, `create_channel`, `list_channels`, `read_messages` | Uses `SLACK_BOT_TOKEN` environment variable |
 | [Notion](https://interfaces.to/tools/notion) | Find, read and create pages in Notion | `search_notion`, `query_notion_database`, `read_notion_page`, `create_notion_page` | Uses `NOTION_TOKEN` environment variable. Databases must be explicitly shared with the integration. |
+| [Airtable](https://interfaces.to/tools/airtable) | Find, read and create records in Airtable | `list_all_bases`, `get_base`, `list_base_records`, `create_base_records` | Uses `AIRTABLE_TOKEN` environment variable |
 
+More tools are coming soon:
 
-Coming soon:
+* People Data Labs
+* Twilio
+* GitHub
+* Jira
+* Discord
+* and more!
 
-* [GitHub](https://interfaces.to/tools/github):
-  * `create_issue`: Create an issue on GitHub
-  * `create_pull_request`: Create a pull request on GitHub
-  * `create_gist`: Create a gist on GitHub
-  * `create_repository`: Create a repository on GitHub
-  * `commit_to_repository`: Commit changes to a repository on GitHub
-  * `get_repository`: Get a repository on GitHub
-  * `search_repositories`: Search for repositories on GitHub
-* [Jira](https://interfaces.to/tools/jira):
-  * `create_issue`: Create an issue on Jira
-  * `assign_issue`: Assign an issue on Jira
-  * `transition_issue`: Transition an issue on Jira
-  * `comment_on_issue`: Comment on an issue on Jira
-  * `get_issue`: Get an issue on Jira
-  * `search_issues`: Search for issues on Jira
-* [Discord](https://interfaces.to/tools/discord): `send_discord_message` (Send a message to a Discord channel)
-* [Telegram](https://interfaces.to/tools/telegram): `send_telegram_message` (Send a message to a Telegram chat)
-* [Facebook Messenger](https://interfaces.to/tools/facebook-messenger): `send_facebook_message` (Send a message to a Facebook Messenger chat)
-* [WhatsApp](https://interfaces.to/tools/whatsapp): `send_whatsapp_message` (Send a message to a WhatsApp chat)
-* [X](https://interfaces.to/tools/x): `post_to_x` (Post on X)
-* [Reddit](https://interfaces.to/tools/reddit): `post_to_reddit` (Post on Reddit)
-* [Twilio](https://interfaces.to/tools/twilio): `send_sms` (Send an SMS message)
-* [SendGrid](https://interfaces.to/tools/sendgrid): `send_email` (Send an email)
-* [Mailgun](https://interfaces.to/tools/mailgun): `send_email` (Send an email)
-* [Google Sheets](https://interfaces.to/tools/google-sheets): `write_to_sheet` (Write data to a Google Sheet)
-* [Google Drive](https://interfaces.to/tools/google-drive): `upload_file` (Upload a file to Google Drive)
-* [Google Calendar](https://interfaces.to/tools/google-calendar): `create_event` (Create an event on Google Calendar)
-* [Google Maps](https://interfaces.to/tools/google-maps): `get_directions` (Get directions between two locations)
-* [Google Search](https://interfaces.to/tools/google-search): `search` (Search the web)
-* [Wikipedia](https://interfaces.to/tools/wikipedia): `search` (Search Wikipedia)
-* [Weather](https://interfaces.to/tools/weather): `get_weather` (Get the current weather)
-
+See the [🛠️ Tools Project plan](https://github.com/orgs/interfaces-to/projects/1) for more information on upcoming tools.
 
 ## 📚 Documentation (coming soon!)
 
