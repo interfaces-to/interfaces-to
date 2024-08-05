@@ -48,14 +48,11 @@ def run(messages, completion, tools, pretty_messages=True):
                             "tool_call_id": tool_call.id
                         })
 
-    if pretty_messages:
-        # make messages pretty for output from a notebook cell
-        return Messages(messages)
-
     return messages
 
 
-def print_message(message, tool_calls_message=None):
+def print_message(message):
+
     # Define ANSI escape codes for colors
     role_colors = {
         'user': '\033[92m',  # Green
@@ -63,6 +60,8 @@ def print_message(message, tool_calls_message=None):
         'assistant': '\033[93m',  # Yellow
         'reset': '\033[0m'   # Reset
     }
+
+    tool_calls_message = True if 'tool_calls' in message else False
 
     role = message['role']
 
@@ -114,41 +113,17 @@ def running(messages, verbose=True) -> bool:
     if not messages:
         return False
 
-    is_running = messages[-1]['role'] in ['user', 'tool']
+    # is running if last role is user, tool, or assistant but with tool_calls
+    is_running = messages[-1]['role'] in ['user', 'tool'] or (messages[-1]['role'] == 'assistant' and 'tool_calls' in messages[-1])
 
-    if verbose:
+    # if verbose and type of messages is not .bases Messagesm, make messages = Messages(messages)
+    if verbose and not isinstance(messages, Messages):        
+        messages = Messages(messages, verbose=True, pretty_printer=print_message)
 
-        # get the last message
-        message = messages[-1]
-
-        # if the last message is from the user, print it
-        if message['role'] in ('user', 'assistant'):
-            print_message(message)
-
-        # if the last message is from a tool, print all immediately preceding messages from a tool in the original order
-        if message['role'] == 'tool':
-
-            to_print = []
-            for i, message in enumerate(reversed(messages)):
-                if message['role'] == 'tool':
-                    to_print.append(message)
-                else:
-                    break
-
-            if messages[-i-1]['role'] == 'assistant' and messages[-i-1]['tool_calls']:
-                print_message(messages[-i-1])
-
-            # get the last message where tool_calls is not None
-            tool_calls_message = next((message for message in reversed(
-                messages) if message.get('tool_calls')), None)
-
-            for messages in reversed(to_print):
-                if tool_calls_message:
-                    print_message(messages, tool_calls_message)
-                else:
-                    print_message(messages)
-
-    return is_running
+    if is_running:
+        return messages
+    else:
+        return False
 
 
 def import_tools(tool_names=[], include_self=True):
