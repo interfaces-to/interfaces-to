@@ -11,7 +11,7 @@
 ⭐️ Built-in tools for common tasks and platforms<br/>
 ⭐️ Start building with just 4(!) lines of code<br/>
 ⭐️ Beginner-friendly Python library<br/>
-⭐️ Extensible design for custom tools<br/>
+⭐️ Extensible design for custom tools ([example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/tools/peopledatalabs.py))<br/>
 ⭐️ Simple and secure configuration<br/>
 ⭐️ Fully compatible with the OpenAI API SDK<br/>
 ⭐️ Works with gpt-4o, gpt-4o-mini and other OpenAI models<br/>
@@ -221,7 +221,7 @@ See the [🛠️ Tools Project plan](https://github.com/orgs/interfaces-to/proje
 
 The `messages` variable required by OpenAI SDK is a list of dictionaries, where each dictionary represents a message. Each message must have a `role` key with a value of either `user` or `assistant`, and a `content` key with the message content.
 
-`into` has experiment support for reading messages dynamically. You can use `into.read_messages` to configure it. Currently only one source can be configured at a time.
+`into` has experimental support for reading messages dynamically. You can use `into.read_messages` to configure it.
 
 ```python
 messages = into.read_messages(["Slack"])
@@ -229,7 +229,14 @@ messages = into.read_messages(["Slack"])
 
 The following sources are currently supported:
 
-* Slack (requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` set as environment variables or in `.env`)
+| Source | Description | Configuration |
+| --- | --- | --- |
+| [Slack](https://interfaces.to/messages/slack) | Read messages from a Slack channel where your app is mentioned or in direct messages | Requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` environment variable. Socket Mode must be enabled with the appropriate events. |
+
+### Limitations
+
+* Currently only one source can be configured at a time.
+* History is not retained between the resolution of messages, however `into` is about to simulate message history by calling the Slack `read_messages` tool if equipped with `into.import_tools(['Slack'])`.
 
 
 ## 📚 Documentation (coming soon!)
