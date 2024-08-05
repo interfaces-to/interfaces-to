@@ -54,7 +54,7 @@ tools = into.import_tools(['Slack','OpenAI'])
 
 # 4️⃣ provide some input and start the loop
 messages = [{"role": "user", "content": "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"}]
-while into.running(messages):
+while messages := into.running(messages):
 
   # 5️⃣ create a completion as normal, and run your tools! 🪄
   completion = client.chat.completions.create(
@@ -71,91 +71,91 @@ while into.running(messages):
 This prints the following output:
 ```python
 [user]		  What was the last thing said in each slack channel? Write a 5 line poem to summ
-		      arise and share it in an appropriate channel
+		    arise and share it in an appropriate channel
 
-[assistant]   Calling 1 tool:
-		      list_channels({})
+[assistant]     Calling 1 tool:
+		    list_channels({})
 
 [tool]	      Output of tool call list_channels({})
 		      Channels: [{'id': 'C07EEUES770', 'name': 'general', 'is_channel':...
 
 [assistant]	  Calling 7 tools:
-              read_messages({"channel": "general"})
-              read_messages({"channel": "hello"})
-              read_messages({"channel": "fun-times"})
-              read_messages({"channel": "poetry"})
-              read_messages({"channel": "jokes"})
-              read_messages({"channel": "welcome"})
-              read_messages({"channel": "random"})
+                read_messages({"channel": "general"})
+                read_messages({"channel": "hello"})
+                read_messages({"channel": "fun-times"})
+                read_messages({"channel": "poetry"})
+                read_messages({"channel": "jokes"})
+                read_messages({"channel": "welcome"})
+                read_messages({"channel": "random"})
 
 [tool]		  Output of tool call read_messages({"channel": "random"})
-		      Messages: [{'subtype': 'channel_join', 'user': 'U07ET3LMDB7', ...
+		    Messages: [{'subtype': 'channel_join', 'user': 'U07ET3LMDB7', ...
 
 [tool]		  Output of tool call read_messages({"channel": "welcome"})
-		      Error reading messages: not_in_channel
+		    Error reading messages: not_in_channel
 
 [tool]		  Output of tool call read_messages({"channel": "jokes"})
-		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': '1722477596.990159', ...
+		    Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': '1722477596.990159', ...
 
 [tool]		  Output of tool call read_messages({"channel": "poetry"})
-		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts':...
+		    Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts':...
 
 [tool]		  Output of tool call read_messages({"channel": "fun-times"})
-		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': ...
+		    Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': ...
 
 [tool]		  Output of tool call read_messages({"channel": "hello"})
-		      Messages: [{'subtype': 'channel_join', 'user': 'U07EP9STUTU', 'text': '<@U07EP9STUTU> has joined the channel', 'type': 'message', 'ts': '1722421262.722359'}]
+		    Messages: [{'subtype': 'channel_join', 'user': 'U07EP9STUTU', 'text': '<@U07EP9STUTU> has joined the channel', 'type': 'message', 'ts': '1722421262.722359'}]
 
 [tool]		  Output of tool call read_messages({"channel": "general"})
-		      Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': ...
+		    Messages: [{'user': 'U07EP9STUTU', 'type': 'message', 'ts': ...
 
 [assistant]	  Here is a summary poem of the last messages shared in the Slack channels:
 		
-              In **#general**, they said with glee,
-              "Atoms make up all that we see!"
-              **#hello** greeted someone new,
-              Joining the channel, the greetings flew.
-              
-              **#fun-times** loved a joke,
-              On atoms that can't be broke.
-              In the **#poetry** nook, atoms we praised,
-              With playful rhymes, our spirits raised.
-              
-              **#jokes** was all about the spin,
-              Electrons in a debate always win.
-              And though **#welcome** remained hushed,
-              **#random** laughed at atoms crushed.
-              
-              I'll share this poem in the **#poetry** channel.
+                In **#general**, they said with glee,
+                "Atoms make up all that we see!"
+                **#hello** greeted someone new,
+                Joining the channel, the greetings flew.
+                
+                **#fun-times** loved a joke,
+                On atoms that can't be broke.
+                In the **#poetry** nook, atoms we praised,
+                With playful rhymes, our spirits raised.
+                
+                **#jokes** was all about the spin,
+                Electrons in a debate always win.
+                And though **#welcome** remained hushed,
+                **#random** laughed at atoms crushed.
+                
+                I'll share this poem in the **#poetry** channel.
 
 [tool]		  Output of tool call send_slack_message({"channel":"poetry","message":"Here's a "...
-              Message sent to poetry with timestamp 1722493789.651039: 
-              Here's a summary poem of our last messages:
-              
-              In **#general**, they said with glee,
-              "Atoms make up all that we see!"
-              **#hello** greeted someone new,
-              Joining the channel, the greetings flew.
-              
-              **#fun-times** loved a joke,
-              On atoms that can't be broke.
-              In the **#poetry** nook, atoms we praised,
-              With playful rhymes, our spirits raised.
-              
-              **#jokes** was all about the spin,
-              Electrons in a debate always win.
-              And though **#welcome** remained hushed,
-              **#random** laughed at atoms crushed.
+                Message sent to poetry with timestamp 1722493789.651039: 
+                Here's a summary poem of our last messages:
+                
+                In **#general**, they said with glee,
+                "Atoms make up all that we see!"
+                **#hello** greeted someone new,
+                Joining the channel, the greetings flew.
+                
+                **#fun-times** loved a joke,
+                On atoms that can't be broke.
+                In the **#poetry** nook, atoms we praised,
+                With playful rhymes, our spirits raised.
+                
+                **#jokes** was all about the spin,
+                Electrons in a debate always win.
+                And though **#welcome** remained hushed,
+                **#random** laughed at atoms crushed.
 
 [assistant]	  I have shared the poem summarizing the last messages in each channel
-              to the **#poetry** channel.
+                to the **#poetry** channel.
 ```
 
 `messages` is also updated with the latest messages and retains the format needed by the OpenAI SDK, so you can continue the adventure and build more complex applications.
 
 You can run this example in [this Jupyter notebook](./quickstart.ipynb).
 
-### Configurating tools
+### Configuring tools
 
 #### Using environment variables (Recommended for production)
 
@@ -216,6 +216,21 @@ More tools are coming soon:
 * and more!
 
 See the [🛠️ Tools Project plan](https://github.com/orgs/interfaces-to/projects/1) for more information on upcoming tools.
+
+## 🌐 Experimental: Dynamic messages
+
+The `messages` variable required by OpenAI SDK is a list of dictionaries, where each dictionary represents a message. Each message must have a `role` key with a value of either `user` or `assistant`, and a `content` key with the message content.
+
+`into` has experiment support for reading messages dynamically. You can use `into.read_messages` to configure it. Currently only one source can be configured at a time.
+
+```python
+messages = into.read_messages(["Slack"])
+```
+
+The following sources are currently supported:
+
+* Slack (requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` set as environment variables or in `.env`)
+
 
 ## 📚 Documentation (coming soon!)
 

@@ -7,7 +7,7 @@ import json
 import importlib
 
 
-def run(messages, completion, tools, pretty_messages=True):
+def run(messages, completion, tools):
     tool_map = {json.loads(json.dumps(tool))[
         "function"]["name"]: tool for tool in tools}
 
@@ -91,7 +91,7 @@ def print_message(message):
             print(f"{color}[{role}]{role_colors['reset']}\t\tOutput of tool call {tool_call['function']['name']}({tool_call['function']['arguments']})\n\t{message['content']}{role_colors['reset']}")
         else:
             print(
-                f"{color}[{role}]{role_colors['reset']}\t\t{message['content']}{role_colors['reset']}")
+                f"{color}[{role}]{role_colors['reset']}\t{message['content']}{role_colors['reset']}")
 
     elif message['tool_calls']:
         print(f"{color}[{role}]{role_colors['reset']}\tCalling {len(message['tool_calls'])} tool{'s' if len(message['tool_calls']) > 1 else ''}:")
@@ -111,16 +111,27 @@ def running(messages, verbose=True) -> bool:
     """If the most recent message is from the user or a tool, return True"""
 
     if not messages:
-        return False
-
-    # is running if last role is user, tool, or assistant but with tool_calls
-    is_running = messages[-1]['role'] in ['user', 'tool'] or (messages[-1]['role'] == 'assistant' and 'tool_calls' in messages[-1])
+        is_running = False
+    else:
+        # is running if last role is user, tool, or assistant but with tool_calls
+        is_running = messages[-1]['role'] in ['user', 'tool'] or (messages[-1]['role'] == 'assistant' and 'tool_calls' in messages[-1])
 
     # if verbose and type of messages is not .bases Messagesm, make messages = Messages(messages)
-    if verbose and not isinstance(messages, Messages):        
-        messages = Messages(messages, verbose=True, pretty_printer=print_message)
+    if verbose:
+        if not isinstance(messages, Messages):       
+            messages = Messages(messages, verbose=True, print_fn=print_message)
+            for message in messages:
+                messages.print_fn(message)
+        else:
+            messages.verbose = True
+            messages.print_fn = print_message
 
     if is_running:
+        return messages
+    elif isinstance(messages, Messages) and messages.listeners:
+        # we need wait to listen for messages
+        messages.clear_if_finished()
+        messages.block_if_empty()
         return messages
     else:
         return False
@@ -245,3 +256,23 @@ def tool_auth(*, token_env_name):
         cls.token_env_name = token_env_name
         return cls
     return decorator
+
+def read_messages(listener_names=[]):
+
+    if not listener_names:
+        raise ValueError("You must specify at least one listener")
+
+    if len(listener_names) > 1:
+        raise NotImplementedError(
+            "More than one listener is not yet supported")
+
+    try:
+        listeners = []
+        for listener_name in listener_names:
+            listener_class = importlib.import_module(
+                f".{listener_name}", package=f"{__package__}.messages")
+            listeners.append(listener_class().listen)
+
+        return Messages(listeners=listeners)
+    except ModuleNotFoundError as e:
+        raise ValueError(f"Listener {listener_name} not found.") from e

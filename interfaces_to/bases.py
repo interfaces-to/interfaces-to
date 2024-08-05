@@ -47,21 +47,26 @@ def _inject_token(cls, token):
     cls.token = token
     return cls
 
+import threading
+
 class Messages(list):
 
     # accept verbose as a parameter in addition to the messages
-    def __init__(self, messages, verbose=False, pretty_printer=None):
-        super().__init__(messages)
+    def __init__(self, *args, verbose=False, print_fn=None, listeners=[]):
+        super().__init__(*args)
         self.verbose = verbose
-
-        if pretty_printer:
-            self.print_fn = pretty_printer
-        else:
+        self.print_fn = print_fn
+        if self.print_fn == None:
             self.print_fn = print
+        self.listeners = listeners
 
-        if verbose:
-            for message in messages:
-                self.print_fn(message)
+        # if verbose and self:
+        #     for message in self:
+        #         self.print_fn(message)
+        
+        if listeners:
+            self.condition = threading.Condition()
+            threading.Thread(target=listeners[0], args=(self,), daemon=True).start()
 
     # override append to check if verbose is set
     def append(self, message):
@@ -69,6 +74,19 @@ class Messages(list):
             self.print_fn(message)
 
         super().append(message)
+
+        if hasattr(self, 'condition'):
+            with self.condition:
+                self.condition.notify()
+    
+    def block_if_empty(self):
+        with self.condition:
+            while not self:
+                self.condition.wait()
+    
+    def clear_if_finished(self):
+        if self and (self[-1]['role'] == 'assistant' and 'tool_calls' not in self[-1]):
+            self.clear()
 
     def __repr__(self):
         return json.dumps(self, indent=2, ensure_ascii=False)

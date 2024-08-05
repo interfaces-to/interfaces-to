@@ -35,24 +35,31 @@ class Slack(FunctionSet):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "channel": {
+                        "channel_name": {
                             "type": "string",
                             "description": "The Slack channel, e.g. general. Always omit the # symbol",
                         },
+                        "channel_id": {
+                            "type": "string",
+                            "description": "The ID of the Slack channel, e.g. C07EEUES770.",
+                        },
                     },
-                    "required": ["channel"],
                 },
             }
 
-        def read_messages(self, channel):
+        def read_messages(self, channel_name="", channel_id=""):
             client = WebClient(token=self.tool.token)
             try:
                 channels = self._get_channels()
                 _channel = None
-                for c in channels:
-                    if c["name"] == channel:
-                        _channel = c
-                response = client.conversations_history(channel=_channel["id"])
+                if channel_name != "":
+                    for c in channels:
+                        if c["name"] == channel_name:
+                            _channel = c
+                    channel_id = _channel["id"]
+                if channel_id == "":
+                    return f"Error reading messages: must provide channel name or channel id"
+                response = client.conversations_history(channel=channel_id)
                 messages = response["messages"]
                 return f"Messages: {messages}"
             except SlackApiError as e:
@@ -130,20 +137,24 @@ class Slack(FunctionSet):
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "channel": {
+                        "channel_name": {
                             "type": "string",
-                            "description": "The Slack channel, e.g. general. Always omit the # symbol",
+                            "description": "The Slack channel name, e.g. general. Always omit the # symbol",
+                        },
+                        "channel_id": {
+                            "type": "string",
+                            "description": "The ID of the Slack channel e.g. C07EEUES770"
                         },
                         "message": {
                             "type": "string",
-                            "description": "The message to send to the Slack channel",
+                            "description": "The message to send to the Slack channel"
                         },
                     },
-                    "required": ["channel", "message"],
+                    "required": ["message"],
                 },
             }
 
-        def send_slack_message(self, channel, message):
+        def send_slack_message(self,  message, channel_name="", channel_id=""):
             client = WebClient(token=self.tool.token)
 
             # get channels
@@ -151,23 +162,31 @@ class Slack(FunctionSet):
 
             # check if channel exists
             _channel = None
+            if channel_name != "":
+                for c in channels:
+                    if c["name"] == channel_name:
+                        _channel = c
+                channel_id = _channel["id"]
+            if channel_id == "":
+                return f"Error reading messages: must provide channel name or channel id"
+
+            if channel_id == "":
+                return f"Channel {channel_id} not found"
+
             for c in channels:
-                if c["name"] == channel:
+                if c["id"] == channel_id:
                     _channel = c
 
-            if not _channel:
-                return f"Channel {channel} not found"
-            
             # join if not member
-            if not _channel['is_member']:
-                self._join_channel(_channel['id'])
+            # if not _channel['is_member']:
+            #     self._join_channel(_channel['id'])
 
             try:
                 response = client.chat_postMessage(
-                    channel=_channel['id'],
+                    channel=channel_id,
                     text=message
                 )
-                return f"Message sent to {channel} with timestamp {response['ts']}: {message}"
+                return f"Message sent to {channel_id} with timestamp {response['ts']}: {message}"
             except SlackApiError as e:
                 return f"Error sending message: {e.response['error']}"
 
