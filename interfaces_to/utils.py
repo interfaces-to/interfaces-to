@@ -5,7 +5,7 @@ from .bases import JSONSerializableFunction, Messages
 from docstring_parser import parse
 import json
 import importlib
-
+import os
 
 def run(messages, completion, tools):
     tool_map = {json.loads(json.dumps(tool))[
@@ -255,6 +255,27 @@ def tool_auth(*, token_env_name):
     def decorator(cls):
         cls.token_env_name = token_env_name
         return cls
+    return decorator
+
+
+def message_auth(required_env_vars):
+    if isinstance(required_env_vars, str):
+        required_env_vars = [required_env_vars]
+
+    def decorator(cls):
+        original_init = cls.__init__
+
+        def new_init(self, *args, **kwargs):
+            missing_vars = [var for var in required_env_vars if not os.environ.get(var)]
+            if missing_vars:
+                raise ValueError(f"The following environment variables must be set: {', '.join(missing_vars)}")
+            
+            self.token = {var: os.environ.get(var) for var in required_env_vars}
+            original_init(self, *args, **kwargs)
+
+        cls.__init__ = new_init
+        return cls
+
     return decorator
 
 def read_messages(listener_names=[]):
