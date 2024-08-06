@@ -3,7 +3,8 @@ import sys
 from ..utils import LazyImport
 
 message_listeners = [
-    ('Slack', '.messages.slack')
+    ('Slack', '.messages.slack'),
+    ('Ngrok', '.messages.ngrok')
 ]
 
 for class_name, location in message_listeners:

@@ -219,9 +219,9 @@ See the [🛠️ Tools Project plan](https://github.com/orgs/interfaces-to/proje
 
 ## 🌐 Experimental: Dynamic messages
 
-The `messages` variable required by OpenAI SDK is a list of dictionaries, where each dictionary represents a message. Each message must have a `role` key with a value of either `user` or `assistant`, and a `content` key with the message content.
+`into` supports reading messages dynamically. The `messages` variable required by OpenAI SDK is a list of dictionaries, where each dictionary represents a message. Each message must have a `role` key with a value of either `user` or `assistant`, and a `content` key with the message content.
 
-`into` has experimental support for reading messages dynamically. You can use `into.read_messages` to configure it.
+You can use `into.read_messages` to configure dynamic messages.
 
 ```python
 messages = into.read_messages(["Slack"])
@@ -232,11 +232,14 @@ The following sources are currently supported:
 | Source | Description | Configuration |
 | --- | --- | --- |
 | [Slack](https://interfaces.to/messages/slack) | Read messages from a Slack channel where your app is mentioned or in direct messages | Requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` environment variable. Socket Mode must be enabled with the appropriate events. |
+| [Ngrok](https://interfaces.to/messages/ngrok) | Receive POST bodies from https://XXXX-255-255-255-255.ngrok-free.app/message. Useful for testing webhooks locally. | Requires `NGROK_AUTHTOKEN` environment variable. |
+
+See the [💬 Messages Project plan](https://github.com/orgs/interfaces-to/projects/3) for more information on upcoming tools.
 
 ### Limitations
 
 * Currently only one source can be configured at a time.
-* History is not retained between the resolution of messages, however `into` is about to simulate message history by calling the Slack `read_messages` tool if equipped with `into.import_tools(['Slack'])`.
+* History is not retained between the resolution of messages, however `into` is able to simulate message history by calling the Slack `read_messages` tool if equipped with `into.import_tools(['Slack'])`.
 
 
 ## 📚 Documentation (coming soon!)
