@@ -1,3 +1,6 @@
+import pkg_resources
+from packaging.version import parse as parse_version
+from packaging.specifiers import SpecifierSet
 from pydantic import create_model
 from typing import get_type_hints
 import inspect
@@ -6,6 +9,7 @@ from docstring_parser import parse
 import json
 import importlib
 import os
+
 
 def run(messages, completion, tools):
     tool_map = {json.loads(json.dumps(tool))[
@@ -114,11 +118,12 @@ def running(messages, verbose=True) -> bool:
         is_running = False
     else:
         # is running if last role is user, tool, or assistant but with tool_calls
-        is_running = messages[-1]['role'] in ['user', 'tool'] or (messages[-1]['role'] == 'assistant' and 'tool_calls' in messages[-1])
+        is_running = messages[-1]['role'] in ['user', 'tool'] or (
+            messages[-1]['role'] == 'assistant' and 'tool_calls' in messages[-1])
 
     # if verbose and type of messages is not .bases Messagesm, make messages = Messages(messages)
     if verbose:
-        if not isinstance(messages, Messages):       
+        if not isinstance(messages, Messages):
             messages = Messages(messages, verbose=True, print_fn=print_message)
             for message in messages:
                 messages.print_fn(message)
@@ -156,12 +161,35 @@ def import_tools(tool_names=[], include_self=True):
 
 
 class LazyImport:
-    def __init__(self, module_name, class_name):
+    def __init__(self, module_name, class_name, dependencies=[]):
         self.module_name = module_name
         self.class_name = class_name
+        self.dependencies = dependencies
         self._class = None
 
+    def _check_dependencies(self):
+        for package_spec in self.dependencies:
+            try:
+                split_point = min([i for i in range(
+                    len(package_spec)) if package_spec[i] in "><=!" and package_spec[i:i+2] != '!='])
+                package = package_spec[:split_point].strip()
+                specifiers = package_spec[split_point:].strip()
+
+                dist = pkg_resources.get_distribution(package)
+                spec_set = SpecifierSet(specifiers)
+                if not spec_set.contains(parse_version(dist.version)):
+                    raise ImportError(
+                        f"Package '{package}' version must satisfy '{specifiers}'. Please run 'pip install \"{package}{specifiers}\"'.")
+            except pkg_resources.DistributionNotFound:
+                raise ImportError(f"Package '{package}' is not installed. Please run 'pip install {package}{specifiers}'.")
+            except Exception as e:
+                raise ImportError(f"Dependency check failed for '{package_spec}': {e}")
+        return True
+
     def _load_class(self):
+        if self.dependencies and not self._check_dependencies():
+            raise ImportError(
+                f"Dependencies for '{self.class_name}' are not met.")
         module = importlib.import_module(self.module_name, package=__package__)
         self._class = getattr(module, self.class_name)
 
@@ -266,17 +294,21 @@ def message_auth(required_env_vars):
         original_init = cls.__init__
 
         def new_init(self, *args, **kwargs):
-            missing_vars = [var for var in required_env_vars if not os.environ.get(var)]
+            missing_vars = [
+                var for var in required_env_vars if not os.environ.get(var)]
             if missing_vars:
-                raise ValueError(f"The following environment variables must be set: {', '.join(missing_vars)}")
-            
-            self.token = {var: os.environ.get(var) for var in required_env_vars}
+                raise ValueError(
+                    f"The following environment variables must be set: {', '.join(missing_vars)}")
+
+            self.token = {var: os.environ.get(var)
+                          for var in required_env_vars}
             original_init(self, *args, **kwargs)
 
         cls.__init__ = new_init
         return cls
 
     return decorator
+
 
 def read_messages(listener_names=[]):
 
