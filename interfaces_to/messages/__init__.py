@@ -4,12 +4,12 @@ from ..utils import LazyImport
 
 message_listeners = [
     ('Slack', '.messages.slack'),
-    ('Ngrok', '.messages.ngrok')
+    ('Ngrok', '.messages.ngrok'),
+    ('FastAPI', '.messages.fastapi'),
 ]
 
 for class_name, location in message_listeners:
     sys.modules[__name__ + '.' + class_name] = LazyImport(location, class_name)
-
     # create an attribute for each listener
     setattr(sys.modules[__name__], class_name, LazyImport(location, class_name))
 

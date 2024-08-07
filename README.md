@@ -200,7 +200,7 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 
 | Tool | Description | Functions | Configuration |
 | --- | --- | --- | --- |
-| [Self](https://interfaces.to/tools/self) | Encourage self awareness, time awareness and logical evaluation. | `wait`, `plan`, `get_time`, `do_math` | Not required. |
+| [Self](https://interfaces.to/tools/self) | Encourage self awareness, time awareness and logical evaluation. | `wait`, `plan`, `get_time`, `do_math` | None required. |
 | [OpenAI](https://interfaces.to/tools/openai) | Create completions and embeddings with the OpenAI API (Yes, that means self-prompting 🔥) | `create_chat_completion`, `create_embedding` | Uses `OPENAI_API_KEY` environment variable |
 | [Slack](https://interfaces.to/tools/slack) | Send messages to Slack channels, create channels, list channels, and read messages | `send_slack_message`, `create_channel`, `list_channels`, `read_messages` | Uses `SLACK_BOT_TOKEN` environment variable |
 | [Notion](https://interfaces.to/tools/notion) | Find, read and create pages in Notion | `search_notion`, `query_notion_database`, `read_notion_page`, `create_notion_page` | Uses `NOTION_TOKEN` environment variable. Databases must be explicitly shared with the integration. |
@@ -232,7 +232,8 @@ The following sources are currently supported:
 | Source | Description | Configuration |
 | --- | --- | --- |
 | [Slack](https://interfaces.to/messages/slack) | Read messages from a Slack channel where your app is mentioned or in direct messages | Requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` environment variable. Socket Mode must be enabled with the appropriate events. |
-| [Ngrok](https://interfaces.to/messages/ngrok) | Receive POST bodies from https://XXXX-255-255-255-255.ngrok-free.app/message. Useful for testing webhooks locally. | Requires `NGROK_AUTHTOKEN` environment variable. |
+| [Ngrok](https://interfaces.to/messages/ngrok) | Receive POST /message body using Ngrok at https://XXXX-255-255-255-255.ngrok-free.app. Useful for testing webhooks locally. | Requires `NGROK_AUTHTOKEN` environment variable. |
+| [FastAPI](https://interfaces.to/messages/fastapi) | Receive POST /message body on Port 8080 with FastAPI. | None required. |
 
 See the [💬 Messages Project plan](https://github.com/orgs/interfaces-to/projects/3) for more information on upcoming tools.
 
