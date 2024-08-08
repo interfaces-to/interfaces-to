@@ -18,10 +18,18 @@ python = "^3.10"
 python-dotenv = "^1.0.1"
 docstring-parser = "^0.16"
 requests = "^2.32.3"
+pydantic = "^2.8.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0" 
 
+[tool.poetry.group.dev.dependencies]
+slack-sdk = "^3.31.0"
+openai = "^1.40.1"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+into = "interfaces_to.cli:main"

@@ -6,6 +6,7 @@ message_listeners = [
     ('Ngrok', '.messages.ngrok', [('ngrok>=1.4.0')]),
     ('FastAPI', '.messages.fastapi', [('fastapi>=0.112.0'), ('uvicorn>=0.30.5')]),
     ('Gradio', '.messages.gradio', [('gradio>=4.40.0'), ('ipywidgets>=8.1.3')]),
+    ('CLI', '.messages.cli', []),
 ]
 
 for class_name, location, dependencies in message_listeners:
