@@ -256,6 +256,12 @@ You can install `into` with the CLI support by running:
 
 ```bash
 pipx install interfaces_to
+pipx ensurepath
+```
+
+Then you can run `into` with the following command:
+
+```bash
 into --tools=Slack "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"
 ```
 
@@ -263,6 +269,11 @@ or run it with poetry by cloning this repository:
 
 ```bash
 poetry install
+```
+  
+Then you can run `into` with the following command:
+  
+  ```bash
 poetry run into --tools=Slack "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"
 ```
 

@@ -19,6 +19,7 @@ python-dotenv = "^1.0.1"
 docstring-parser = "^0.16"
 requests = "^2.32.3"
 pydantic = "^2.8.2"
+packaging = "^24.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0" 
