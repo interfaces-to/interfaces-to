@@ -323,7 +323,7 @@ def read_messages(listener_names=[]):
         for listener_name in listener_names:
             listener_class = getattr(listener_module, listener_name)
             listener_instance = listener_class()
-            listeners.append(listener_instance.listen)
+            listeners.append(listener_instance)
 
         return Messages(listeners=listeners)
     except ModuleNotFoundError as e:

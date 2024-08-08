@@ -68,8 +68,9 @@ class Messages(list):
 
         if listeners:
             self.condition = threading.Condition()
-            threading.Thread(target=listeners[0], args=(
-                self,), daemon=True).start()
+            for listener in listeners:
+                threading.Thread(target=listener.listen, args=(
+                    self,), daemon=True).start()
 
     # override append to check if verbose is set
     def append(self, message):
