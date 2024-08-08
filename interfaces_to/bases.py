@@ -68,9 +68,12 @@ class Messages(list):
 
         if listeners:
             self.condition = threading.Condition()
+            self.threads = []
             for listener in listeners:
-                threading.Thread(target=listener.listen, args=(
-                    self,), daemon=True).start()
+                thread = threading.Thread(target=listener.listen, args=(
+                    self,), daemon=True)
+                thread.start()
+                self.threads.append(thread)
 
     # override append to check if verbose is set
     def append(self, message):
@@ -100,25 +103,27 @@ class MessageQueue:
     def __init__(self):
         self.message_queue = Queue()
         self.new_message_event = Event()
-        self.start_client()
+        self.ready_for_input = Event()
+        self.exit_event = Event() 
+        self.ready_for_input.set()
+        self.thread = self.start_client()
 
     def put_message(self, message):
         self.message_queue.put(message)
         self.new_message_event.set()
 
     def listen(self, messages):
-        while True:
+        while not self.exit_event.is_set():
+            self.new_message_event.wait()
+            while not self.message_queue.empty():
+                incoming_message = self.message_queue.get()
+                messages.append(incoming_message)
+            self.new_message_event.clear()
             if not messages:
-                if self.new_message_event.is_set():
-                    self.new_message_event.clear()
-                    while not self.message_queue.empty():
-                        incoming_message = self.message_queue.get()
-                        messages.append(incoming_message)
-            else:
-                self.new_message_event.wait()
+                self.ready_for_input.set()
 
     def client_thread(self):
         raise NotImplementedError("Subclasses should implement this method")
 
     def start_client(self):
-        Thread(target=self.client_thread, daemon=True).start()
+        return Thread(target=self.client_thread, daemon=True).start()

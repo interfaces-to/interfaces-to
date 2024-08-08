@@ -134,6 +134,11 @@ def running(messages, verbose=True) -> bool:
     if is_running:
         return messages
     elif isinstance(messages, Messages) and messages.listeners:
+        if all(listener.exit_event.is_set() for listener in messages.listeners):
+            messages.exit()
+            return False
+        for listener in messages.listeners:
+            listener.ready_for_input.set()
         # we need wait to listen for messages
         messages.clear_if_finished()
         messages.block_if_empty()

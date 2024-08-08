@@ -8,17 +8,19 @@
 
 ## ✨ Key Features
 
-⭐️ Built-in tools for common tasks and platforms<br/>
+⭐️ Built-in tools for common tasks and platforms ([see all](#-available-tools))<br/>
+⭐️ Dynamic message sources for real-time interactions ([see all](#-experimental-dynamic-messages))<br/>
 ⭐️ Start building with just 4(!) lines of code<br/>
-⭐️ Beginner-friendly Python library<br/>
-⭐️ Extensible design for custom tools ([example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/tools/peopledatalabs.py))<br/>
+⭐️ Beginner-friendly Python library, learn and teach coding with **🐙 Interfaces**!<br/>
 ⭐️ Simple and secure configuration<br/>
 ⭐️ Fully compatible with the OpenAI API SDK<br/>
 ⭐️ Works with gpt-4o, gpt-4o-mini and other OpenAI models<br/>
-⭐️ Works with llama3.1, mistral-large and more via [ollama tools](https://ollama.com/search?c=tools)<br/>
+⭐️ Works with llama3.1, mistral-large and more via [Ollama](https://ollama.com/search?c=tools)<br/>
+⭐️ Works with Azure OpenAI ([more info](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints)<br/>
 ⭐️ Supports (thrives) on `parallel_tool_calls` ([more info](https://platform.openai.com/docs/guides/function-calling/parallel-function-calling)) <br/>
-⭐️ Works with any LLM that supports the OpenAI API<br/>
+⭐️ Works with any other LLM applications and services that support the OpenAI API<br/>
 ⭐️ Runs on your local machine, in the cloud, or on the edge<br/>
+⭐️ Extensible design for building custom tools ([example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/tools/peopledatalabs.py)) and message sources [example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/messages/ngrok.py)<br/>
 ⭐️ Open-source, MIT licensed, and community-driven<br/>
 
 ## 🚀 Quick Start
@@ -232,8 +234,9 @@ The following sources are currently supported:
 | Source | Description | Configuration |
 | --- | --- | --- |
 | [Slack](https://interfaces.to/messages/slack) | Read messages from a Slack channel where your app is mentioned or in direct messages | Requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` environment variable. Socket Mode must be enabled with the appropriate events. |
-| [Ngrok](https://interfaces.to/messages/ngrok) | Receive POST /message body using Ngrok at https://XXXX-255-255-255-255.ngrok-free.app. Useful for testing webhooks locally. | Requires `NGROK_AUTHTOKEN` environment variable. |
+| [Ngrok](https://interfaces.to/messages/ngrok) | Receive POST /message body using Ngrok. Useful for testing webhooks locally. | Requires `NGROK_AUTHTOKEN` environment variable. |
 | [FastAPI](https://interfaces.to/messages/fastapi) | Receive POST /message body on Port 8080 with FastAPI. | None required. |
+| [Gradio](https://interfaces.to/messages/gradio) | Receive messages from Gradio's ChatInterface. | None required. |
 | [CLI](https://interfaces.to/messages/cli) | Read messages from the command line. For use in scripts executed on the command line or with running `into` itself (see below). | None required. |
 
 See the [💬 Messages Project plan](https://github.com/orgs/interfaces-to/projects/3) for more information on upcoming tools.
@@ -253,32 +256,47 @@ You can install `into` with the CLI support by running:
 
 ```bash
 pipx install interfaces_to
+into --tools=Slack "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"
 ```
 
-and then run and interact with `into` on the command line:
+or run it with poetry by cloning this repository:
 
 ```bash
-into --tools=Slack,OpenAI
-
-> Enter the message to be processed: 
+poetry install
+poetry run into --tools=Slack "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"
 ```
 
-or run `into` with a message directly via stdin:
+You can also pipe messages to `into`, which will output JSON for manipulation in other tools like `jq`:
 
 ```bash
-echo "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel" | into --tools=Slack,OpenAI
+echo "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel" | into --tools=Slack
 ```
 
-To test out `into` on the command line without installing, clone this repository and run:
+### Usage
+
+* `--help` - Show help message.
+* `--tools` - A comma-separated list of tools to import. e.g. `--tools=Slack,OpenAI`
+* `--messages` - A comma-separated list of message sources to import. e.g. `--messages=Slack,CLI`
+* `--model` - The model to use for completions. e.g. `--model=gpt-4o`
+* `--api-key` - The OpenAI API key to use for completions. e.g. `--api-key=sk-12345678`
+* `--endpoint` - The endpoint to use for completions. e.g. `--endpoint=https://myendpoint`
+* `--azure` - Use Azure functions for completions. e.g. `--azure`
+* `[message]` - The message to send to the tools when `--messages=CLI` is set. This can passed in via stdin or as the last argument. When provided, `into` will run the tools and output the result as JSON to stdout.
+
+### Use with Azure OpenAI
+
+You can use `into` with Azure OpenAI by setting the flags below.
 
 ```bash
-poetry run into --tools=Slack,OpenAI
+into --tools=Slack --azure --endpoint --model=gpt-4o --api-key=sk-12345678 "summarise the last messages in each slack channel"
 ```
 
-or run `into` with a message directly via stdin:
+### Use with open source models via Ollama
+
+You can use `into` with open source models via Ollama by setting the flags below. **Important:** The model MUST support function calling. Full list of compatible models can be found [here](https://ollama.com/search?c=tools).
 
 ```bash
-echo "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel" | poetry run into --tools=Slack,OpenAI
+into --tools=Slack --endpoint=http://localhost:11434/v1 --model=llama3.1:8b "what is the time?"
 ```
 
 ## 📚 Documentation (coming soon!)
