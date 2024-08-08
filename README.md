@@ -234,14 +234,52 @@ The following sources are currently supported:
 | [Slack](https://interfaces.to/messages/slack) | Read messages from a Slack channel where your app is mentioned or in direct messages | Requires `SLACK_APP_TOKEN` and `SLACK_BOT_TOKEN` environment variable. Socket Mode must be enabled with the appropriate events. |
 | [Ngrok](https://interfaces.to/messages/ngrok) | Receive POST /message body using Ngrok at https://XXXX-255-255-255-255.ngrok-free.app. Useful for testing webhooks locally. | Requires `NGROK_AUTHTOKEN` environment variable. |
 | [FastAPI](https://interfaces.to/messages/fastapi) | Receive POST /message body on Port 8080 with FastAPI. | None required. |
+| [CLI](https://interfaces.to/messages/cli) | Read messages from the command line. For use in scripts executed on the command line or with running `into` itself (see below). | None required. |
 
 See the [💬 Messages Project plan](https://github.com/orgs/interfaces-to/projects/3) for more information on upcoming tools.
 
 ### Limitations
 
 * Currently only one source can be configured at a time.
-* History is not retained between the resolution of messages, however `into` is able to simulate message history by calling the Slack `read_messages` tool if equipped with `into.import_tools(['Slack'])`.
+* History is not retained between the resolution of messages, however `into` is able to simulate message history by calling the Slack `read_messages` tool if equipped with `into.import_tools(['Slack'])`. 
 
+## 📟 Experimental: CLI Support
+
+`into` supports running tools from the command line. This is useful when `CLI` is the message source, allowing you to run as a standalone application.
+
+By default this uses OpenAI and requires the `OPENAI_API_KEY` environment variable.
+
+You can install `into` with the CLI support by running:
+
+```bash
+pipx install interfaces_to
+```
+
+and then run and interact with `into` on the command line:
+
+```bash
+into --tools=Slack,OpenAI
+
+> Enter the message to be processed: 
+```
+
+or run `into` with a message directly via stdin:
+
+```bash
+echo "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel" | into --tools=Slack,OpenAI
+```
+
+To test out `into` on the command line without installing, clone this repository and run:
+
+```bash
+poetry run into --tools=Slack,OpenAI
+```
+
+or run `into` with a message directly via stdin:
+
+```bash
+echo "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel" | poetry run into --tools=Slack,OpenAI
+```
 
 ## 📚 Documentation (coming soon!)
 
