@@ -311,20 +311,19 @@ def message_auth(required_env_vars):
 
 
 def read_messages(listener_names=[]):
-
     if not listener_names:
         raise ValueError("You must specify at least one listener")
 
     if len(listener_names) > 1:
-        raise NotImplementedError(
-            "More than one listener is not yet supported")
+        raise NotImplementedError("More than one listener is not yet supported")
 
     try:
         listeners = []
+        listener_module = importlib.import_module(f"{__package__}.messages")
         for listener_name in listener_names:
-            listener_class = importlib.import_module(
-                f".{listener_name}", package=f"{__package__}.messages")
-            listeners.append(listener_class().listen)
+            listener_class = getattr(listener_module, listener_name)
+            listener_instance = listener_class()
+            listeners.append(listener_instance.listen)
 
         return Messages(listeners=listeners)
     except ModuleNotFoundError as e:
