@@ -16,7 +16,7 @@
 ⭐️ Fully compatible with the OpenAI API SDK<br/>
 ⭐️ Works with gpt-4o, gpt-4o-mini and other OpenAI models<br/>
 ⭐️ Works with llama3.1, mistral-large and more via [Ollama](https://ollama.com/search?c=tools)<br/>
-⭐️ Works with Azure OpenAI ([more info](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints)<br/>
+⭐️ Works with Azure OpenAI ([more info](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints))<br/>
 ⭐️ Supports (thrives) on `parallel_tool_calls` ([more info](https://platform.openai.com/docs/guides/function-calling/parallel-function-calling)) <br/>
 ⭐️ Works with any other LLM applications and services that support the OpenAI API<br/>
 ⭐️ Runs on your local machine, in the cloud, or on the edge<br/>
