@@ -255,8 +255,20 @@ By default this uses OpenAI and requires the `OPENAI_API_KEY` environment variab
 You can install `into` with the CLI support by running:
 
 ```bash
-pipx install interfaces_to
 pipx ensurepath
+pipx install interfaces_to
+```
+
+Since `pipx` installs packages in an isolated environment, you may need to add the dependencies for the tools you want to use. To do this for the Slack tool, you can do this at install time by running:
+
+```bash
+pipx install interfaces_to[slack]
+```
+
+If you want to use additional tools after install, you can install the dependencies with:
+
+```bash
+pipx inject interfaces_to ngrok
 ```
 
 Then you can run `into` with the following command:
