@@ -61,6 +61,7 @@ class Messages(list):
         if self.print_fn == None:
             self.print_fn = print
         self.listeners = listeners
+        self.system = None
 
         # if verbose and self:
         #     for message in self:
@@ -77,6 +78,11 @@ class Messages(list):
 
     # override append to check if verbose is set
     def append(self, message):
+        if self.system and not self:
+            super().append(self.system)
+            if self.verbose:
+                self.print_fn(self.system)
+
         if self.verbose:
             self.print_fn(message)
 

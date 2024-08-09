@@ -2,15 +2,16 @@
 <center><img src="https://github.com/interfaces-to/interfaces-to/raw/main/interfaces-to.png" alt="interfaces.to" width="250" /></center>
 
 
-# Add a little Action to your LLM Adventure with 🐙 Interfaces
+# Add a little action to your LLM adventure with 🐙 Interfaces
 
-**🐙 Interfaces** (aka `into`) is the quickest way to make Large Language Models _do_ things. It's a simple, powerful and flexible way to build more useful, more engaging and more valuable applications with LLMs.
+**🐙 Interfaces** (aka `into`) is the quickest way to make Large Language Models _do_ things. It's a simple, powerful and flexible way to build more useful, more engaging and more valuable agent-driven applications with LLMs.
 
 ## ✨ Key Features
 
 ⭐️ Built-in tools for common tasks and platforms ([see all](#-available-tools))<br/>
 ⭐️ Dynamic message sources for real-time interactions ([see all](#-experimental-dynamic-messages))<br/>
-⭐️ Start building with just 4(!) lines of code<br/>
+⭐️ Start building with ~~just 4~~ only 3(!) lines of code<br/>
+⭐️ Create agents with system messages to control behaviour ([more info](#-setting-the-system-message))<br/>
 ⭐️ Beginner-friendly Python library, learn and teach coding with **🐙 Interfaces**!<br/>
 ⭐️ Simple and secure configuration<br/>
 ⭐️ Fully compatible with the OpenAI API SDK<br/>
@@ -20,7 +21,8 @@
 ⭐️ Supports (thrives) on `parallel_tool_calls` ([more info](https://platform.openai.com/docs/guides/function-calling/parallel-function-calling)) <br/>
 ⭐️ Works with any other LLM applications and services that support the OpenAI API<br/>
 ⭐️ Runs on your local machine, in the cloud, or on the edge<br/>
-⭐️ Extensible design for building custom tools ([example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/tools/peopledatalabs.py)) and message sources [example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/messages/ngrok.py)<br/>
+⭐️ Run tools from the command line with the `into` CLI ([see all](#-experimental-cli-support))<br/>
+⭐️ Extensible design for building custom tools ([example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/tools/peopledatalabs.py)) and message sources ([example](https://github.com/interfaces-to/interfaces-to/blob/main/interfaces_to/messages/ngrok.py))<br/>
 ⭐️ Open-source, MIT licensed, and community-driven<br/>
 
 ## 🚀 Quick Start
@@ -51,21 +53,19 @@ import interfaces_to as into
 from openai import OpenAI
 client = OpenAI()
 
-# 3️⃣ add your favourite tools
-tools = into.import_tools(['Slack','OpenAI'])
+# 3️⃣ set a message and add your favourite tools
+agent = into.Agent().add_tools(['Slack','OpenAI']).add_messages("What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel")
 
-# 4️⃣ provide some input and start the loop
-messages = [{"role": "user", "content": "What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"}]
-while messages := into.running(messages):
+# 4️⃣ start the agent loop
+while agent:
 
   # 5️⃣ create a completion as normal, and run your tools! 🪄
-  completion = client.chat.completions.create(
+  agent.completion = client.chat.completions.create(
     model="gpt-4o",
-    messages=messages,
-    tools=tools,
+    messages=agent.messages,
+    tools=agent.tools,
     tool_choice="auto"
   )
-  messages = into.run(messages, completion, tools)
 
 # 6️⃣ stand back and watch the magic happen! 🎩✨
 ```
@@ -153,9 +153,17 @@ This prints the following output:
                 to the **#poetry** channel.
 ```
 
-`messages` is also updated with the latest messages and retains the format needed by the OpenAI SDK, so you can continue the adventure and build more complex applications.
+`agent.messages` is also updated with the latest messages and retains the format needed by the OpenAI SDK, so you can continue the adventure and build more complex applications.
 
 You can run this example in [this Jupyter notebook](./quickstart.ipynb).
+
+### Setting the system message
+
+You can modify the behaviour of your agent by setting the system message.
+
+```python
+agent = into.Agent("Always talk like a pirate")
+```
 
 ### Configuring tools
 
@@ -163,7 +171,13 @@ You can run this example in [this Jupyter notebook](./quickstart.ipynb).
 
 Tools usually require a `token`. Tokens can always be configured by setting the relevant environment variables. e.g. for `Slack` you can set the `SLACK_BOT_TOKEN` environment variable.
 
-If you are using environment variables, you can take advantage of the `into.import_tools` function to automatically configure your tools. This function will look for the relevant environment variables and configure the tools with default settings.
+If you are using environment variables, you can take advantage of `agent.add_tools` or the `into.import_tools` function to automatically configure your tools. This function will look for the relevant environment variables and configure the tools with default settings.
+
+```python
+agent.add_tools(['Slack'])
+```
+
+or
 
 ```python
 tools = into.import_tools(['Slack'])
@@ -223,7 +237,13 @@ See the [🛠️ Tools Project plan](https://github.com/orgs/interfaces-to/proje
 
 `into` supports reading messages dynamically. The `messages` variable required by OpenAI SDK is a list of dictionaries, where each dictionary represents a message. Each message must have a `role` key with a value of either `user` or `assistant`, and a `content` key with the message content.
 
-You can use `into.read_messages` to configure dynamic messages.
+You can use `agent.add_messages` or `into.read_messages` to configure dynamic messages.
+
+```python
+agent.add_messages(["What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel"])
+```
+
+or
 
 ```python
 messages = into.read_messages(["Slack"])

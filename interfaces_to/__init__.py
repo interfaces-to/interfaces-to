@@ -3,6 +3,7 @@ load_dotenv()
 
 import sys
 from .utils import LazyImport, run, running, import_tools, read_messages
+from .agent import Agent
 
 # all tools are imported lazily to avoid hard package dependencies
 tool_classes = [
@@ -22,5 +23,5 @@ for class_name, location, dependencies in tool_classes:
     setattr(sys.modules[__name__], class_name, LazyImport(location, class_name, dependencies))
 
 # only export what is needed
-__all__ = [class_name for class_name, _, _  in tool_classes] + [run, running, import_tools, read_messages]
+__all__ = [class_name for class_name, _, _  in tool_classes] + [run, running, import_tools, read_messages, Agent]
 

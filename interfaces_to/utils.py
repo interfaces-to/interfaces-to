@@ -60,6 +60,7 @@ def print_message(message):
     # Define ANSI escape codes for colors
     role_colors = {
         'user': '\033[92m',  # Green
+        'system': '\033[90m', # Grey
         'tool': '\033[94m',  # Blue
         'assistant': '\033[93m',  # Yellow
         'reset': '\033[0m'   # Reset
@@ -70,7 +71,7 @@ def print_message(message):
     role = message['role']
 
     # if role is not assistant, add a tab to align the messages
-    if role != 'assistant':
+    if role not in ('assistant','system'):
         message['content'] = f"\t{message['content']}"
 
     # add newlines after every 80 characters if role is user or assistant
