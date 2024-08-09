@@ -82,6 +82,9 @@ class Messages(list):
 
         super().append(message)
 
+        for listener in self.listeners:
+            listener.receive_message(message)
+
         if hasattr(self, 'condition'):
             with self.condition:
                 self.condition.notify()
@@ -107,6 +110,10 @@ class MessageQueue:
         self.exit_event = Event() 
         self.ready_for_input.set()
         self.thread = self.start_client()
+        self.messages = []
+
+    def receive_message(self, message):
+        self.messages.append(message)
 
     def put_message(self, message):
         self.message_queue.put(message)
@@ -114,6 +121,7 @@ class MessageQueue:
 
     def listen(self, messages):
         while not self.exit_event.is_set():
+            
             self.new_message_event.wait()
             while not self.message_queue.empty():
                 incoming_message = self.message_queue.get()
