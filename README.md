@@ -43,7 +43,7 @@ poetry add interfaces-to
 
 ### Usage
 
-Add your favourite tools to your existing Python project with 4 lines of code:
+Turn your OpenAI completion into a fully capable agent with 3 lines of code:
 
 ```python
 # 1️⃣ import `into`
@@ -53,13 +53,11 @@ import interfaces_to as into
 from openai import OpenAI
 client = OpenAI()
 
-# 3️⃣ set a message and add your favourite tools
+# 3️⃣ add your favourite tools and set a message
 agent = into.Agent().add_tools(['Slack','OpenAI']).add_messages("What was the last thing said in each slack channel? Write a 5 line poem to summarise and share it in an appropriate channel")
 
-# 4️⃣ start the agent loop
+# 4️⃣ start the agent loop, with an OpenAI completion
 while agent:
-
-  # 5️⃣ create a completion as normal, and run your tools! 🪄
   agent.completion = client.chat.completions.create(
     model="gpt-4o",
     messages=agent.messages,
@@ -67,7 +65,7 @@ while agent:
     tool_choice="auto"
   )
 
-# 6️⃣ stand back and watch the magic happen! 🎩✨
+# 5️⃣ watch the magic happen! 🎩✨
 ```
 
 This prints the following output:
