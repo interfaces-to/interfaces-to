@@ -34,9 +34,9 @@ class Self(FunctionSet):
     @callable_function
     def get_time(self):
         """
-        Get the current time
+        Get the current time including the date and time zone. Useful for tracking when events occur.
         """
-        return time.ctime()
+        return f"Current time: {time.strftime('%Y-%m-%d %H:%M:%S %Z')}"
     
     @callable_function
     def do_math(self, expression: str):
