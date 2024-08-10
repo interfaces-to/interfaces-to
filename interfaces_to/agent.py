@@ -2,7 +2,7 @@ from . import read_messages, import_tools, running, run
 from .bases import Messages
 
 class Agent:
-    def __init__(self, system_message=None):
+    def __init__(self, system_message=None, verbose=True):
         self.tools = None
         self.messages = None
         self.first_run = True
@@ -10,6 +10,7 @@ class Agent:
         self.tools_list = None
         self.messages_list = None
         self.system = {"role":"system","content":system_message} if system_message else None
+        self.verbose = verbose
 
     def add_tools(self, tools_list):
         self.tools_list = tools_list
@@ -42,7 +43,7 @@ class Agent:
                 self.messages = [self.system] + self.messages
             
 
-        self.messages = running(self.messages)
+        self.messages = running(self.messages, verbose=self.verbose)
         if self.completion is None and self.first_run:
             self.first_run = False
             return True

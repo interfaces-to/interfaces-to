@@ -50,9 +50,9 @@ def main():
             args.message = sys.stdin.read().strip()
 
     if args.system:
-        agent = Agent(args.system).add_tools(tools_input)
+        agent = Agent(args.system, verbose=False if args.message else True).add_tools(tools_input)
     else:
-        agent = Agent().add_tools(tools_input)
+        agent = Agent(verbose=False if args.message else True).add_tools(tools_input)
 
     if args.message:
         agent.add_messages(args.message)
