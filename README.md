@@ -329,7 +329,7 @@ echo "What was the last thing said in each slack channel? Write a 5 line poem to
 You can use `into` with Azure OpenAI by setting the flags below.
 
 ```bash
-into --tools=Slack --azure --endpoint --model=gpt-4o --api-key=sk-12345678 "summarise the last messages in each slack channel"
+into --tools=Slack --azure --endpoint=https://azure-endpoint --model=gpt-4o --api-key=sk-12345678 "summarise the last messages in each slack channel"
 ```
 
 ### Use with open source models via Ollama
