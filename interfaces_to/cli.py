@@ -6,7 +6,7 @@ from . import import_tools, read_messages, running, run
 
 def main():
     parser = argparse.ArgumentParser(description='Run interfaces_to with specified tools.')
-    parser.add_argument('--tools', required=True, help='Comma-separated list of tools to use, e.g., --tools=Slack,OpenAI')
+    parser.add_argument('--tools', default="Self", help='Comma-separated list of tools to use, e.g., --tools=Slack,OpenAI')
     parser.add_argument('--messages', default='CLI', help='Comma-separated list of message sources, default is CLI')
     parser.add_argument('--model', default='gpt-4o', help='Model to use, default is gpt-4o')
     parser.add_argument('--api-key', help='OpenAI API key')
@@ -18,7 +18,6 @@ def main():
     args = parser.parse_args()
 
     tools_input = args.tools.split(',')
-
     tools = import_tools(tools_input)
 
     if args.azure:
@@ -41,10 +40,14 @@ def main():
             base_url=args.endpoint
         ) if args.endpoint else OpenAI(api_key=args.api_key or os.getenv("OPENAI_API_KEY"))
 
-    if args.messages == 'CLI' and args.message:
-        messages = [{"role": "user", "content": args.message}]
-        # suppress stdout
-        sys.stdout = open(os.devnull, 'w')
+    if args.messages == 'CLI':
+        if not sys.stdin.isatty():
+            args.message = sys.stdin.read().strip()
+        if args.message:
+            messages = [{"role": "user", "content": args.message}]
+            sys.stdout = open(os.devnull, 'w')
+        else:
+            messages = read_messages(['CLI'])
     else:
         messages_sources = args.messages.split(',')
         messages = read_messages(messages_sources)
@@ -62,7 +65,6 @@ def main():
         final_messages = messages
 
     if args.messages == 'CLI' and args.message:
-        # restore stdout
         sys.stdout = sys.__stdout__
         if args.all:
             print(json.dumps(final_messages, indent=2))
