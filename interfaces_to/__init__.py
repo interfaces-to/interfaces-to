@@ -8,6 +8,7 @@ from .agent import Agent
 # all tools are imported lazily to avoid hard package dependencies
 tool_classes = [
     ('Self', '.tools.self', []),
+    ('System', '.tools.system', []),
     ('Slack', '.tools.slack', [('slack_sdk>=3.31.0')]),
     ('OpenAI', '.tools.openai', [('openai>=1.37.1')]),
     ('Notion', '.tools.notion', [('notion-client>=2.2.1')]),

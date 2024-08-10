@@ -14,6 +14,8 @@ class JSONSerializableFunction(dict):
 
 
 class FunctionSet():
+    tools = None
+    system = None
     token_env_name = None
 
     def __init__(self, token=None, functions=None):

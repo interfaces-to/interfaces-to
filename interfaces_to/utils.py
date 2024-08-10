@@ -12,6 +12,11 @@ import os
 
 
 def run(messages, completion, tools):
+    for tool in tools:
+        if isinstance(messages, Messages):
+            tool.system = messages.system
+        tool.tools = tools
+
     tool_map = {json.loads(json.dumps(tool))[
         "function"]["name"]: tool for tool in tools}
 
@@ -51,6 +56,18 @@ def run(messages, completion, tools):
                             "content": result,
                             "tool_call_id": tool_call.id
                         })
+
+
+    # check if System is in tools
+    if 'set_system_message' in tool_map or 'clear_system_message' in tool_map:
+        # check if the System tool .system is different from system
+        if tool_map['set_system_message'].system != messages.system:
+            # modify the system message in messages
+            messages.system = tool_map['set_system_message'].system
+        elif tool_map['clear_system_message'].system != messages.system:
+            # clear the system message in messages
+            messages.system = tool_map['clear_system_message'].system
+
 
     return messages
 

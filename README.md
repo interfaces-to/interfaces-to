@@ -215,6 +215,7 @@ Note that each tool is preceded by an asterisk `*` to unpack the tool's function
 | Tool | Description | Functions | Configuration |
 | --- | --- | --- | --- |
 | [Self](https://interfaces.to/tools/self) | Encourage self awareness, time awareness and logical evaluation. | `wait`, `plan`, `get_time`, `do_math` | None required. |
+| [System](https://interfaces.to/tools/system) | Control the system behaviour. | `get_system_message`, `set_system_message`, `clear_system_message` | None required. |
 | [OpenAI](https://interfaces.to/tools/openai) | Create completions and embeddings with the OpenAI API (Yes, that means self-prompting 🔥) | `create_chat_completion`, `create_embedding` | Uses `OPENAI_API_KEY` environment variable |
 | [Slack](https://interfaces.to/tools/slack) | Send messages to Slack channels, create channels, list channels, and read messages | `send_slack_message`, `create_channel`, `list_channels`, `read_messages` | Uses `SLACK_BOT_TOKEN` environment variable |
 | [Notion](https://interfaces.to/tools/notion) | Find, read and create pages in Notion | `search_notion`, `query_notion_database`, `read_notion_page`, `create_notion_page` | Uses `NOTION_TOKEN` environment variable. Databases must be explicitly shared with the integration. |
