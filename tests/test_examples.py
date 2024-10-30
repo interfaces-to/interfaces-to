@@ -60,3 +60,18 @@ def test_slackbot_script(mock_openai, mock_slack):
     
     # Check if the script produced the expected output
     assert "Mocked response from OpenAI" in result.stdout, "Expected output not found in script output"
+
+@patch('openai.ChatCompletion.create', side_effect=mock_openai_chat_completions_create)
+@patch('slack_sdk.WebClient.chat_postMessage', side_effect=mock_slack_api_call)
+def test_slackbot_ollama_script(mock_openai, mock_slack):
+    # Set up environment variables
+    os.environ['SLACK_BOT_TOKEN'] = 'xoxb-12345678-xxxxxxxxxx'
+    
+    # Run the slackbot-ollama.py script
+    result = subprocess.run(['python', 'examples/slackbot-ollama/slackbot-ollama.py'], capture_output=True, text=True)
+    
+    # Check if the script ran successfully
+    assert result.returncode == 0, f"Script failed with error: {result.stderr}"
+    
+    # Check if the script produced the expected output
+    assert "Mocked response from OpenAI" in result.stdout, "Expected output not found in script output"
